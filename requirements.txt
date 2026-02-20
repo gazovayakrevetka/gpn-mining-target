@@ -4,7 +4,7 @@ matplotlib
 seaborn
 scikit-learn
 xgboost
-streamlit
+streamlit==1.54.0
 joblib
 openpyxl
 altair<5
