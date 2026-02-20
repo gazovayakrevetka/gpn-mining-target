@@ -1,0 +1,37 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environments
+.venv/
+venv/
+env/
+
+# VSCode / PyCharm
+.vscode/
+.idea/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Python packaging
+build/
+dist/
+*.egg-info/
+
+# Jupyter / Streamlit cache
+.ipynb_checkpoints/
+.streamlit/cache/
+.streamlit/logs/
+
+# Logs
+*.log
+
+# Secrets / env
+.env
+.env.*
+
+# ВАЖНО: CSV и PKL не игнорируем, они нужны для работы
+

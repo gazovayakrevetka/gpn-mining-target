@@ -1,0 +1,11 @@
+Best model: RandomForest
+
+=== CV results (5-fold, train) ===
+LinearRegression: RMSE=0.0000±0.0000, R2=1.0000±0.0000
+RandomForest: RMSE=-0.0000±0.0000, R2=1.0000±0.0000
+XGBRegressor: RMSE=0.0000±0.0000, R2=1.0000±0.0000
+MLPRegressor: RMSE=0.0081±0.0004, R2=0.9996±0.0000
+
+=== Test metrics ===
+RandomForest: RMSE=0.0000, MAE=0.0000, R2=1.0000
+LinearRegression: RMSE=0.0000, MAE=0.0000, R2=1.0000
