@@ -30,6 +30,25 @@ TARGET_COLUMN = "Target"
 @st.cache_resource
 def load_artifacts():
     """Загружает модель, кодировщик, скейлер и метрики из папки GPN2."""
+    # Проверяем наличие файлов перед загрузкой
+    required_files = {
+        "best_model.pkl": BASE_DIR / "best_model.pkl",
+        "encoder.pkl": BASE_DIR / "encoder.pkl",
+        "scaler.pkl": BASE_DIR / "scaler.pkl",
+    }
+    
+    missing_files = []
+    for name, path in required_files.items():
+        if not path.exists():
+            missing_files.append(name)
+    
+    if missing_files:
+        raise FileNotFoundError(
+            f"Отсутствуют файлы модели: {', '.join(missing_files)}. "
+            f"Текущая директория: {BASE_DIR}. "
+            f"Загрузите эти файлы на GitHub в корень репозитория."
+        )
+    
     best_model = joblib.load(BASE_DIR / "best_model.pkl")
     encoder = joblib.load(BASE_DIR / "encoder.pkl")
     scaler = joblib.load(BASE_DIR / "scaler.pkl")
@@ -215,15 +234,40 @@ def main():
         """
     )
 
+    # Отладочная информация (можно убрать после исправления)
+    with st.expander("🔍 Отладочная информация", expanded=False):
+        import os
+        files_in_dir = sorted([f for f in os.listdir(BASE_DIR) if os.path.isfile(BASE_DIR / f)])
+        st.write(f"**Текущая директория:** `{BASE_DIR}`")
+        st.write(f"**Файлы в директории:** {len(files_in_dir)}")
+        st.write("**Список файлов:**")
+        for f in files_in_dir[:20]:  # Показываем первые 20
+            st.write(f"- `{f}`")
+        if len(files_in_dir) > 20:
+            st.write(f"... и ещё {len(files_in_dir) - 20} файлов")
+
     try:
         model, encoder, scaler, metrics_text, metadata = load_artifacts()
+    except FileNotFoundError as e:
+        st.error(
+            f"❌ **Файл не найден: {e}**\n\n"
+            "**Что нужно сделать:**\n"
+            "1. Убедитесь, что вы запустили локально `2_preprocessing.py` и `3_model_training.py`\n"
+            "2. Загрузите на GitHub следующие файлы из папки GPN2:\n"
+            "   - `best_model.pkl`\n"
+            "   - `encoder.pkl`\n"
+            "   - `scaler.pkl`\n"
+            "   - `model_performance.txt` (опционально)\n"
+            "   - `preprocessing_metadata.pkl` (опционально)\n"
+            "3. После загрузки перезапустите приложение на Streamlit Cloud"
+        )
+        st.stop()
     except Exception as e:
         st.error(
-            "Не удалось загрузить модель или преобразователи. "
-            "Убедитесь, что вы запустили 2_preprocessing.py и 3_model_training.py.\n\n"
-            f"Ошибка: {e}"
+            f"❌ **Ошибка при загрузке модели:**\n\n`{e}`\n\n"
+            "Проверьте логи в Streamlit Cloud для подробностей."
         )
-        return
+        st.stop()
 
     col_left, col_right = st.columns([1, 2])
 
@@ -299,4 +343,5 @@ def main():
 
 if __name__ == "__main__":
     main()
+
 
